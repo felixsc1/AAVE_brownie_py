@@ -1,0 +1,8 @@
+networks:
+  kovan:
+    weth_token: "0x5eca15b12d959dfcf9c71c59f8b467eb8c6efd0b"
+  mainnet-fork:
+    weth_token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+dotenv: .env
+wallets:
+  from_key: ${PRIVATE_KEY}
