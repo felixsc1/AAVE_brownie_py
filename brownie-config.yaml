@@ -5,6 +5,7 @@ compiler:
     remappings:
       - "@aave=aave/protocol-v2@1.0.1"
 networks:
+  default: mainnet-fork
   kovan:
     weth_token: "0x5eca15b12d959dfcf9c71c59f8b467eb8c6efd0b"
     lending_pool_addresses_provider: "0x88757f2f99175387aB4C6a4b3067c77A695b0349"
