@@ -11,5 +11,6 @@ def get_weth(_amountETH):
     weth = interface.IWeth(
         config["networks"][network.show_active()]["weth_token"])
     tx = weth.deposit({"from": account, "value": _amountETH * 10 ** 18})
+    tx.wait(1)
     print("Received 0.1 WETH")
     return tx
