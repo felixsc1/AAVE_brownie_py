@@ -13,7 +13,9 @@ def main():
     if network.show_active() in FORKED_LOCAL_ENVIRONMENTS:
         get_weth(0.1)
     lending_pool = get_lending_pool()
-    approve_erc20(amount, lending_pool.address, erc20_address, account)
+    approve_erc20(amount, lending_pool.address,
+                  erc20_address, account)
+    print("Depositing...")
     tx = lending_pool.deposit(erc20_address, amount,
                               account.address, 0, {"from": account})
     tx.wait(1)
@@ -32,6 +34,16 @@ def main():
     borrow_tx.wait(1)
     print("We borrowed some DAI!")
     get_borrowable_data(lending_pool, account)  # Print updated account data
+    # repay_all(amount_dai_to_borrow, lending_pool, account)
+
+
+def repay_all(amount, lending_pool, account):
+    approve_erc20(Web3.toWei(amount, "ether"), lending_pool,
+                  config["networks"][network.show_active()]["dai_token"], account)
+    repay_tx = lending_pool.repay(
+        config["networks"][network.show_active()]["dai_token"], amount, 1, account.address, {"from": account})
+    repay_tx.wait(1)
+    print("Repayed!")
 
 
 def get_asset_price(price_feed_address):
