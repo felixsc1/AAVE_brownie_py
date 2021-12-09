@@ -22,13 +22,24 @@ def main():
     # DAI in terms of ETH
     dai_eth_price = get_asset_price(
         config["networks"][network.show_active()]["dai_eth_price_feed"])
+    amount_dai_to_borrow = (1 / dai_eth_price) * (borrowable_eth * 0.95)
+    # borrowable_eth --> borrowable_dai (95% to ensure health factor stays ok)
+    print(f"we are going to borrow {amount_dai_to_borrow} DAI")
+    # Borrow
+    dai_address = config["networks"][network.show_active()]["dai_token"]
+    borrow_tx = lending_pool.borrow(
+        dai_address, Web3.toWei(amount_dai_to_borrow, "ether"), 1, 0, account.address, {"from": account})
+    borrow_tx.wait(1)
+    print("We borrowed some DAI!")
+    get_borrowable_data(lending_pool, account)  # Print updated account data
 
 
 def get_asset_price(price_feed_address):
     dai_eth_price_feed = interface.IAggregatorV3(price_feed_address)
     latest_price = dai_eth_price_feed.latestRoundData()[1]
-    print(f"The DAI/ETH price is {latest_price}")
-    return float(latest_price)
+    converted_latest_price = Web3.fromWei(latest_price, "ether")
+    print(f"The DAI/ETH price is {converted_latest_price}")
+    return float(converted_latest_price)
 
 
 def get_borrowable_data(lending_pool, account):
